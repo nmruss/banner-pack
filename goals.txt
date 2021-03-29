@@ -1,0 +1,8 @@
+####### BNNR GOALS #########
+# auto CSS Generation
+# auto png sizing / trimming
+# png quantization
+# speeeeeeed
+# run on any unix system 
+# configurable cli 
+# gui (?)
