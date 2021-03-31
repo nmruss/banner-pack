@@ -1,4 +1,7 @@
 #someid {
   display: flex;
   flex-direction: column;
+  flex-wrap: none;
+  align-items: middle;
+  -ms-justify-content: center;
 }

@@ -24,6 +24,7 @@ namespace Parser{
    //read a css file and return a vector of selectors
    std::vector<selector> parseCSS(std::ifstream& ist){
       std::vector<selector> v;
+      std::vector<attribute> attr_v;
       
       if(ist.fail()){
          //add error code output here
@@ -42,17 +43,18 @@ namespace Parser{
                   ist >> c;
                }
                ist.putback(c);
-               std::cout << selectorName << std::endl;
                break;
             case '{':
-               parseAttributesList(ist);
+               attr_v = parseAttributesList(ist);
                break;
          }
       }
+      std::cout << attr_v << std::endl;
       return v;
    }
 
    //helper function to parse a list of attributes
+   //returns parsed vector of attribute k:v pairs
    std::vector<attribute> parseAttributesList(std::ifstream& ist){
       char c;
       std::vector<attribute> attributesList;
@@ -70,7 +72,7 @@ namespace Parser{
             return attributesList;
          }
 
-         if(!std::isalpha(c)){
+         if(!std::isalpha(c) && !(c == '-')){
             std::cout << "css syntax error, expected an alphanumeric character after {" << std::endl;
             return attributesList;
          }
@@ -81,6 +83,7 @@ namespace Parser{
             ist >> c;
          }
 
+         //read attribute
          if(c == ':'){
             ist >> c;
             while(std::isalpha(c)){
@@ -88,6 +91,9 @@ namespace Parser{
                ist >> c;
             }
          }
+         attr.name = attributeName;
+         attr.value = attributeValue;
+         attributesList.push_back(attr);
 
 //         std::cout << c << std::endl;
 //         std::cout << "attribute1: " << attributeName << std::endl;
@@ -98,9 +104,12 @@ namespace Parser{
      
       return attributesList;
    }
-
+   
+   //print list of k:v pairs for debug
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v){
-      std::cout << v[0].name << std::endl; 
+      for(long unsigned int i=0;i<v.size();i++){
+         std::cout << v[i].name << ':' << v[i].value << std::endl; 
+      }
       return os;
    }
 }
