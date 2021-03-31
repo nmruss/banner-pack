@@ -7,6 +7,7 @@ namespace Parser{
    struct attribute;
    struct selector;
    std::vector<attribute> parseAttributesList(std::ifstream& ist);
+   std::ostream& operator<<(std::ostream& os,std::vector<attribute> v);
 
    struct selector{
       std::string selection;
@@ -55,21 +56,51 @@ namespace Parser{
    std::vector<attribute> parseAttributesList(std::ifstream& ist){
       char c;
       std::vector<attribute> attributesList;
+      attribute attr;
       std::string attributeName;
-      //when you hit ':', move to attribute value
-      //when you hit ';', push to attributesList and reset
-      //when you hit '}' putback into stream and return
-      
-      ist >> c;
-      while(std::isalpha(c)){
-         attributeName+= c;
-         ist >> c;
-      }
+      std::string attributeValue;
 
-      std::cout << c << std::endl;
-      std::cout << "attribute1: " << attributeName << std::endl;
+      //hit ':', move to attribute value
+      //hit ';', push to attributesList and reset
+      //hit '}' putback into stream and return attribute list
       
+      while(ist >> c){
+
+         if(c == '}'){
+            return attributesList;
+         }
+
+         if(!std::isalpha(c)){
+            std::cout << "css syntax error, expected an alphanumeric character after {" << std::endl;
+            return attributesList;
+         }
+
+         //read name
+         while(std::isalpha(c) || c == '-'){
+            attributeName+= c;
+            ist >> c;
+         }
+
+         if(c == ':'){
+            ist >> c;
+            while(std::isalpha(c)){
+               attributeValue += c;
+               ist >> c;
+            }
+         }
+
+//         std::cout << c << std::endl;
+//         std::cout << "attribute1: " << attributeName << std::endl;
+//         std::cout << "attribute1value: " << attributeValue << std::endl;
+         attributeName = "";
+         attributeValue = ""; 
+      }
+     
       return attributesList;
    }
-}
 
+   std::ostream& operator<<(std::ostream& os,std::vector<attribute> v){
+      std::cout << v[0].name << std::endl; 
+      return os;
+   }
+}
