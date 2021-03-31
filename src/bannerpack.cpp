@@ -4,8 +4,9 @@ using namespace std;
 
 int main(){
    string filename;
-   cout << "provide a css file for reading" << endl;
+   cout << "provide a filename" << endl;
    cin >> filename;
+   cout << filename << endl;
    ifstream file(filename);   
    Parser::parseCSS(file);
    return 0;
