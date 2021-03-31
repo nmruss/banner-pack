@@ -62,6 +62,12 @@ namespace Parser{
       std::string attributeName;
       std::string attributeValue;
 
+      if(ist.fail()){
+         std::cout << "failed to open css file" << std::endl;
+         //returns empty on fail
+         return attributesList;
+      }
+
       //hit ':', move to attribute value
       //hit ';', push to attributesList and reset
       //hit '}' putback into stream and return attribute list
@@ -95,9 +101,6 @@ namespace Parser{
          attr.value = attributeValue;
          attributesList.push_back(attr);
 
-//         std::cout << c << std::endl;
-//         std::cout << "attribute1: " << attributeName << std::endl;
-//         std::cout << "attribute1value: " << attributeValue << std::endl;
          attributeName = "";
          attributeValue = ""; 
       }
@@ -105,7 +108,7 @@ namespace Parser{
       return attributesList;
    }
    
-   //print list of k:v pairs for debug
+   //print list of k:v pairs for debugging
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v){
       for(long unsigned int i=0;i<v.size();i++){
          std::cout << v[i].name << ':' << v[i].value << std::endl; 
