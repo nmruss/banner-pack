@@ -18,4 +18,6 @@ namespace Parser{
    };
 
    std::vector<selector> parseCSS(std::ifstream& ist);
+
+   void writeCSS(std::ifstream& ist,std::vector<selector> v);
 }

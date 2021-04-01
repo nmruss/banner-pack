@@ -5,3 +5,9 @@
   align-items: middle;
   -ms-justify-content: center;
 }
+
+.someClassName {
+  display: none;
+  flex-direction: row;
+  align-items: middle;
+}

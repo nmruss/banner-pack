@@ -24,7 +24,6 @@ namespace Parser{
    //read a css file and return a vector of selectors
    std::vector<selector> parseCSS(std::ifstream& ist){
       std::vector<selector> v;
-      std::vector<attribute> attr_v;
       
       if(ist.fail()){
          //add error code output here
@@ -33,10 +32,12 @@ namespace Parser{
 
       char c;
       while(ist >> c){
+         std::vector<attribute> attr_v;
          std::string selectorName;
          
          switch (c){
             case '#':
+            case '.':
                ist >> c;
                while(std::isalpha(c)){
                   selectorName += c;         
@@ -48,8 +49,9 @@ namespace Parser{
                attr_v = parseAttributesList(ist);
                break;
          }
+         std::cout << selectorName;
+         std::cout << attr_v << std::endl;
       }
-      std::cout << attr_v << std::endl;
       return v;
    }
 
@@ -108,7 +110,7 @@ namespace Parser{
       return attributesList;
    }
    
-   //print list of k:v pairs for debugging
+   //print list of k:v pairs 
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v){
       for(long unsigned int i=0;i<v.size();i++){
          std::cout << v[i].name << ':' << v[i].value << std::endl; 
