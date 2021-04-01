@@ -8,10 +8,11 @@ namespace Parser{
    struct selector;
    std::vector<attribute> parseAttributesList(std::ifstream& ist);
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v);
+   std::ostream& operator<<(std::ostream& os,std::vector<selector> v);
 
    struct selector{
-      std::string selection;
-      std::vector<attribute> attrbutesList;
+      std::string name;
+      std::vector<attribute> attributesList;
    };
 
    struct attribute{
@@ -22,6 +23,7 @@ namespace Parser{
    };
 
    //read a css file and return a vector of selectors
+   //only reads basic #,. selectors at the moment
    std::vector<selector> parseCSS(std::ifstream& ist){
       std::vector<selector> v;
       
@@ -32,26 +34,36 @@ namespace Parser{
 
       char c;
       while(ist >> c){
-         std::vector<attribute> attr_v;
+         std::vector<attribute> attr_list;
          std::string selectorName;
-         
+       
          switch (c){
             case '#':
             case '.':
+               //keep searching for a { and fill attr_list
                ist >> c;
                while(std::isalpha(c)){
                   selectorName += c;         
                   ist >> c;
                }
                ist.putback(c);
+               //pretty ugly here
+               //look into doing this recursively
+               ist >> c;
+               if(c == '{'){
+                  attr_list = parseAttributesList(ist);
+               }
                break;
-            case '{':
-               attr_v = parseAttributesList(ist);
-               break;
+        }
+
+        if(attr_list.size() > 0 && selectorName != ""){
+            selector s {}; 
+            s.name = selectorName;
+            s.attributesList = attr_list;
+            v.push_back(s);
          }
-         std::cout << selectorName;
-         std::cout << attr_v << std::endl;
       }
+      std::cout << v;
       return v;
    }
 
@@ -109,11 +121,21 @@ namespace Parser{
      
       return attributesList;
    }
-   
-   //print list of k:v pairs 
-   std::ostream& operator<<(std::ostream& os,std::vector<attribute> v){
-      for(long unsigned int i=0;i<v.size();i++){
-         std::cout << v[i].name << ':' << v[i].value << std::endl; 
+ 
+   //attributes print list of k:v pairs 
+   std::ostream& operator<<(std::ostream& os,std::vector<attribute> attribute_list){ 
+      for(long unsigned int i=0;i<attribute_list.size();i++){
+         std::cout << attribute_list[i].name << ':' << attribute_list[i].value << std::endl; 
+      }
+      return os;
+   }
+
+   //selectors print list of attributes 
+   std::ostream& operator<<(std::ostream& os,std::vector<selector> selector_list){
+      for(long unsigned int i=0;i<selector_list.size();i++){
+         std::cout << "__" << selector_list[i].name << "__" << std::endl;
+         std::cout << selector_list[i].attributesList << std::endl;
+         
       }
       return os;
    }

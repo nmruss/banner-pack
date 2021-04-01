@@ -13,8 +13,8 @@ namespace Parser{
    };
 
    struct selector{
-      std::string selection;
-      std::vector<attribute> attrbutesList;
+      std::string name;
+      std::vector<attribute> attributesList;
    };
 
    std::vector<selector> parseCSS(std::ifstream& ist);
