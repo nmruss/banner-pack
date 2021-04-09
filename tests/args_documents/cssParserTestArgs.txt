@@ -1,2 +1,2 @@
-./tests/parserTest.css
+./tests/css_parser_test/parserTest.css
 

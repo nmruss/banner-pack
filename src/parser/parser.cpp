@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <lodepng.h>
 
 namespace Parser{
    struct attribute;
@@ -22,9 +23,25 @@ namespace Parser{
       std::string value;
    };
 
+   void parsePNG(std::string filename){
+      std::vector <unsigned char> image;
+      unsigned width,height;
+      unsigned error = lodepng::decode(image,width,height,filename);
+      if(error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+      
+      int value = image[0];
+      std::cout << value << " ";
+      std::cout << (int)image[1] << " ";
+      std::cout << (int)image[2] << " ";
+      std::cout << (int)image[3] << " ";
+      /*for(unsigned int i=0;i<image.size();i++){
+      }*/
+   }
+
    //read a css file and return a vector of selectors
    //only reads basic #,. selectors at the moment
-   std::vector<selector> parseCSS(std::ifstream& ist){
+   std::vector<selector> parseCSS(std::string& filename){
+      std::ifstream ist(filename);
       std::vector<selector> v;
       
       if(ist.fail()){
@@ -63,6 +80,7 @@ namespace Parser{
             v.push_back(s);
          }
       }
+      ist.close();
       std::cout << v;
       return v;
    }

@@ -4,5 +4,8 @@
     "**/**.cpp.un~": true,
     "**/**.cpp~": true,
     "**/**.un~": true
+  },
+  "files.associations": {
+    "iostream": "cpp"
   }
 }

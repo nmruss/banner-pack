@@ -2,12 +2,44 @@
 #include "../include/parser.h"
 using namespace std;
 
-int main(){
-   string filename;
-   cout << "provide a filename" << endl;
-   cin >> filename;
-   cout << filename << endl;
-   ifstream file(filename);   
-   Parser::parseCSS(file);
+void TestCSSParser();
+void TestPNGParser();
+
+const string CSS_TEST_PARAM = "test-css-parser";
+const string PNG_TEST_PARAM = "test-png-parser";
+
+int main(int argc,char **argv){
+   //TESTS//
+   for(int i=0;i<argc;++i){
+      cout << argv[i] << endl;
+
+      if(argv[i] == CSS_TEST_PARAM){
+         cout << "~TESTING CSS PARSER~" << endl;
+         TestCSSParser();
+      };
+      if(argv[i] == PNG_TEST_PARAM){
+         cout << "~TESTING PNG PARSER~" << endl;
+         TestPNGParser();
+      }
+   };
+   ////////
+
    return 0;
+}
+
+
+//takes an input file from tests/
+//tests css parser
+void TestCSSParser(){
+   string filename;
+   cin >> filename;
+   Parser::parseCSS(filename);
+}
+
+//takes an input file from tests/
+//tests png parser
+void TestPNGParser(){
+   string filename;
+   cin >> filename;
+   Parser::parsePNG(filename);
 }

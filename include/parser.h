@@ -17,7 +17,10 @@ namespace Parser{
       std::vector<attribute> attributesList;
    };
 
-   std::vector<selector> parseCSS(std::ifstream& ist);
+   //TODO: make this take a filename string?
+   std::vector<selector> parseCSS(std::string& filename);
+   
+   void parsePNG(std::string filename);
 
-   void writeCSS(std::ifstream& ist,std::vector<selector> v);
+   void writeCSS(std::ifstream& ist, std::vector<selector> v);
 }
