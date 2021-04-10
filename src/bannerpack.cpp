@@ -41,5 +41,8 @@ void TestCSSParser(){
 void TestPNGParser(){
    string filename;
    cin >> filename;
-   Parser::parsePNG(filename);
+   Parser::PNGImageTrimData testTrimData;
+   testTrimData = Parser::parsePNGTrimData(filename);
+   std::cout << "x: " << testTrimData.topLeft.x << std::endl;
+   std::cout << "y: " << testTrimData.topLeft.y << std::endl;
 }

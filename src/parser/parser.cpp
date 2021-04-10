@@ -3,10 +3,10 @@
 #include <fstream>
 #include <iostream>
 #include <lodepng.h>
+#include <parser.h>
 
 namespace Parser{
-   struct attribute;
-   struct selector;
+
    std::vector<attribute> parseAttributesList(std::ifstream& ist);
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v);
    std::ostream& operator<<(std::ostream& os,std::vector<selector> v);
@@ -14,29 +14,20 @@ namespace Parser{
    //does this change per system? possibly
    const int BYTES_PER_PX = 4;
 
-   struct selector{
-      std::string name;
-      std::vector<attribute> attributesList;
-   };
-
-   struct attribute{
-      std::string name;
-      //is this best stored as a string?
-      //will likely need to be typecast for some values
-      std::string value;
-   };
-
-   void parsePNG(std::string filename){
+   //parses a png image and returns some data for trimming
+   PNGImageTrimData parsePNGTrimData(std::string filename){
       std::vector <unsigned char> image;
       unsigned width,height;
       unsigned error = lodepng::decode(image,width,height,filename);
       if(error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
       
+      PNGImageTrimData trimData;
+
       int x = 0;
       int y = 0;
       int onPixel = 1;
-      //std::cout << image.size();
-      int zero = 0;
+      const int zero = 0;
+
       for(unsigned int i=3;i<image.size();i+=BYTES_PER_PX){
          if((int)image[i] != zero){
             std::cout << "found a non transparent px" << std::endl;
@@ -52,10 +43,11 @@ namespace Parser{
 
          ++onPixel;
       }
-
-      std::cout << "x: " << x << std::endl;
-      std::cout << "y: " << y << std::endl;
-  }
+      Point topLeftPoint { x, y};
+      trimData.topLeft = topLeftPoint;
+     
+      return trimData;
+   }
 
    //read a css file and return a vector of selectors
    //only reads basic #,. selectors at the moment
