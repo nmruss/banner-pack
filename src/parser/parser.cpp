@@ -16,6 +16,11 @@ namespace Parser{
 
    //parses a png image and returns some data for trimming
    PNGImageTrimData parsePNGTrimData(std::string filename){
+      //Making these work for any PNG not bounded by a non transparent box:
+      //-Find left most x value of all rows (lowest)
+      //-Find top most y value of all columns
+      //-That is your x,y for top left of the container
+
       std::vector <unsigned char> image;
       unsigned width,height;
       unsigned error = lodepng::decode(image,width,height,filename);
@@ -28,6 +33,9 @@ namespace Parser{
       int onPixel = 1;
       const int zero = 0;
 
+      //top left point
+      //TODO:make this work for images that are not bounded
+      //by non-transparent px. (this will only work for squares)
       for(unsigned int i=3;i<image.size();i+=BYTES_PER_PX){
          if((int)image[i] != zero){
             std::cout << "found a non transparent px" << std::endl;
@@ -45,7 +53,7 @@ namespace Parser{
       }
       Point topLeftPoint { x, y};
       trimData.topLeft = topLeftPoint;
-     
+    
       return trimData;
    }
 
