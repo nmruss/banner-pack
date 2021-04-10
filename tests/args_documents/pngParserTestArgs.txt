@@ -1,1 +1,1 @@
-./tests/png_parser_test/test_images/testimg.png
+./tests/png_parser_test/test_images/green_test.png

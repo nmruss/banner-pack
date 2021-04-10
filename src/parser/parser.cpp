@@ -11,6 +11,9 @@ namespace Parser{
    std::ostream& operator<<(std::ostream& os,std::vector<attribute> v);
    std::ostream& operator<<(std::ostream& os,std::vector<selector> v);
 
+   //does this change per system? possibly
+   const int BYTES_PER_PX = 4;
+
    struct selector{
       std::string name;
       std::vector<attribute> attributesList;
@@ -29,14 +32,30 @@ namespace Parser{
       unsigned error = lodepng::decode(image,width,height,filename);
       if(error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
       
-      int value = image[0];
-      std::cout << value << " ";
-      std::cout << (int)image[1] << " ";
-      std::cout << (int)image[2] << " ";
-      std::cout << (int)image[3] << " ";
-      /*for(unsigned int i=0;i<image.size();i++){
-      }*/
-   }
+      int x = 0;
+      int y = 0;
+      int onPixel = 1;
+      //std::cout << image.size();
+      int zero = 0;
+      for(unsigned int i=3;i<image.size();i+=BYTES_PER_PX){
+         if((int)image[i] != zero){
+            std::cout << "found a non transparent px" << std::endl;
+            break;
+         }
+
+         if((onPixel % width) == 0){
+            x=0;
+            y+=1;
+         } else{
+            x+=1;
+         }
+
+         ++onPixel;
+      }
+
+      std::cout << "x: " << x << std::endl;
+      std::cout << "y: " << y << std::endl;
+  }
 
    //read a css file and return a vector of selectors
    //only reads basic #,. selectors at the moment
